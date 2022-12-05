@@ -5,12 +5,12 @@
 
 (def initial 
   (->> *input*
-     (take-while #(not (empty? %)))
-     (drop-last)
-     (map #(re-find stack-re %))
-     (map rest)
-     (apply map list)
-     (map (partial filter #(not= " " %)))))
+       (take-while #(not (empty? %)))
+       (drop-last)
+       (map #(re-find stack-re %))
+       (map rest)
+       (apply map list)
+       (map (partial filter #(not= " " %)))))
 
 (def lines
   (->> *input*
@@ -30,8 +30,8 @@
         (-> stacks
             vec
             (assoc (dec from) (drop n from-stack))
-            (assoc (dec to) (concat to-stack (take n from-stack))))))
+            (assoc (dec to) (concat  (reverse (take n from-stack)) to-stack)))))
     initial
     lines))
 
-(apply str (first (apply map list final)))
+(apply str (map first final))
