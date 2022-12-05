@@ -22,9 +22,12 @@
 (local final (accumulate [stacks initial line (file:lines)]
                (let [[n from to] (parse-line line)]
                  (icollect [i stack (ipairs stacks)]
-                   (if (= from i) (string.sub stack (+ n 1)) (= to i)
-                       (.. (string.sub (. stacks from) 1 n)
-                           stack) stack)))))
+                   (if (= from i) 
+                       (string.sub stack (+ n 1)) 
+                       (= to i)
+                       (.. (string.reverse (string.sub (. stacks from) 1 n))
+                           stack) 
+                       stack)))))
 
 (each [_ d (ipairs final)]
   (io.write (string.sub d 1 1)))
