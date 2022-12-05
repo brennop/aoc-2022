@@ -8,21 +8,23 @@
                line))
 
 (local transposed (icollect [i stack (ipairs (transpose lines))]
-                (if (= (% (- i 2) 4) 0) stack)))
+                    (if (= (% (- i 2) 4) 0) stack)))
 
-(local initial (icollect [_ stack (ipairs transposed)]
-                (table.concat (icollect [_ letter (ipairs stack)]
-                  (if (letter:match "%w") letter)))))
+(local initial
+       (icollect [_ stack (ipairs transposed)]
+         (table.concat (icollect [_ letter (ipairs stack)]
+                         (if (letter:match "%w") letter)))))
 
 (fn parse-line [line]
   (icollect [d (line:gmatch "(%d+)")]
     (tonumber d)))
 
 (local final (accumulate [stacks initial line (file:lines)]
-  (let [[n from to] (parse-line line)]
-    (icollect [i stack (ipairs stacks)]
-      (if (= from i) (string.sub stack (+ n 1))
-          (= to i) (.. (string.reverse (string.sub (. stacks from) 1 n)) stack)
-          stack)))))
+               (let [[n from to] (parse-line line)]
+                 (icollect [i stack (ipairs stacks)]
+                   (if (= from i) (string.sub stack (+ n 1)) (= to i)
+                       (.. (string.sub (. stacks from) 1 n)
+                           stack) stack)))))
 
-(each [_ d (ipairs final)] (io.write (string.sub d 1 1)))
+(each [_ d (ipairs final)]
+  (io.write (string.sub d 1 1)))
