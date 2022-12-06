@@ -5,8 +5,7 @@
     (if (or 
           (string.match (string.sub data a a) (.. "[" (string.sub data b d) "]"))
           (string.match (string.sub data a b) (.. "[" (string.sub data c d) "]"))
-          (string.match (string.sub data a c) (.. "[" (string.sub data d d) "]"))
-          )
+          (string.match (string.sub data a c) (.. "[" (string.sub data d d) "]")))
         (recur (+ n 1))
         n)))
 
