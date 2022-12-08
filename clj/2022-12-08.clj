@@ -13,6 +13,17 @@
         (recur x xs (conj result 1))
         (recur highest xs (conj result 0))))))
 
+(defn score [row]
+  (loop [highest -1
+         distance 0
+         result []
+         [x & xs] row])
+    (if (nil? x)
+      result
+      (if (> x highest)
+        (recur x (inc distance) (conj result distance))
+        (recur highest 0 (conj result 0))))))
+
 (defn rot-90 [matrix]
   (apply mapv vector (reverse matrix)))
 
@@ -33,4 +44,4 @@
      (remove zero?)
      count)
 
-
+(mapv score data)
