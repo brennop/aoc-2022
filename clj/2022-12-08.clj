@@ -18,11 +18,8 @@
     (concat left (take 1 right))))
 
 (defn score [row]
-  (loop [[x & xs] row
-         result []]
-    (if (nil? x)
-      result
-      (recur xs (conj result (count (take-until (partial > x) xs)))))))
+  (mapv (fn [[x & xs]] (count (take-until (partial > x) xs)))
+    (for [i (range (count row))] (subvec row i))))
 
 (defn rot [matrix]
   (apply mapv vector (reverse matrix)))
