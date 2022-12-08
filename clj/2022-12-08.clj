@@ -14,15 +14,14 @@
         (recur highest xs (conj result 0))))))
 
 (defn score [row]
-  (loop [highest -1
-         distance 0
-         result []
-         [x & xs] row])
+  (loop [[x & xs] row
+         result []]
     (if (nil? x)
       result
-      (if (> x highest)
-        (recur x (inc distance) (conj result distance))
-        (recur highest 0 (conj result 0))))))
+      (recur xs (conj result
+                      (if-let [d (first (keep-indexed #(if (<= x %2) %1) xs))]
+                       (inc d)
+                       (count xs)))))))
 
 (defn rot-90 [matrix]
   (apply mapv vector (reverse matrix)))
@@ -39,9 +38,17 @@
   (rot-90 (mapv visible? (rot-270 data)))
   (rot-270 (mapv visible? (rot-90 data)))))
 
+(def scores (mapv (partial mapv *)
+  (mapv score data)
+  (rot-180 (mapv score (rot-180 data)))
+  (rot-90 (mapv score (rot-270 data)))
+  (rot-270 (mapv score (rot-90 data)))))
+
 (->> visible
      flatten
      (remove zero?)
      count)
 
-(mapv score data)
+(->> scores
+     flatten
+     (apply max))
