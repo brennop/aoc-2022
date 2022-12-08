@@ -13,15 +13,16 @@
         (recur x xs (conj result 1))
         (recur highest xs (conj result 0))))))
 
+(defn take-until [pred coll]
+  (let [[left right] (split-with pred coll)]
+    (concat left (take 1 right))))
+
 (defn score [row]
   (loop [[x & xs] row
          result []]
     (if (nil? x)
       result
-      (recur xs (conj result
-                      (if-let [d (first (keep-indexed #(if (<= x %2) %1) xs))]
-                       (inc d)
-                       (count xs)))))))
+      (recur xs (conj result (count (take-until (partial > x) xs)))))))
 
 (defn rot [matrix]
   (apply mapv vector (reverse matrix)))
