@@ -23,32 +23,22 @@
                        (inc d)
                        (count xs)))))))
 
-(defn rot-90 [matrix]
+(defn rot [matrix]
   (apply mapv vector (reverse matrix)))
 
-(defn rot-270 [matrix]
-  (reverse (apply mapv vector matrix)))
-
-(defn rot-180 [matrix]
-  (reverse (mapv reverse matrix)))
-
-(def visible (mapv (partial mapv bit-or)
-  (mapv visible? data)
-  (rot-180 (mapv visible? (rot-180 data)))
-  (rot-90 (mapv visible? (rot-270 data)))
-  (rot-270 (mapv visible? (rot-90 data)))))
-
-(def scores (mapv (partial mapv *)
-  (mapv score data)
-  (rot-180 (mapv score (rot-180 data)))
-  (rot-90 (mapv score (rot-270 data)))
-  (rot-270 (mapv score (rot-90 data)))))
-
-(->> visible
+(->> data
+     (iterate rot)
+     (take 4)
+     (mapv #(mapv visible? %))
+     (reduce #(mapv (partial mapv bit-or) %2 (rot %1)))
      flatten
      (remove zero?)
      count)
 
-(->> scores
+(->> data
+     (iterate rot)
+     (take 4)
+     (mapv (partial mapv score))
+     (reduce #(mapv (partial mapv *) %2 (rot %1)))
      flatten
-     (apply max))
+     (reduce max))
