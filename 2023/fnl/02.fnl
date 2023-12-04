@@ -1,5 +1,3 @@
-(local file (io.input))
-
 (local colors {:red 12 :green 13 :blue 14})
 
 (fn power [data]
@@ -23,6 +21,6 @@
   (let [(id data) (line:match "Game (%d+): (.*)")]
     (power data)))
 
-(print (accumulate [sum 0 line (file:lines)]
+(print (accumulate [sum 0 line (io.lines)]
   (+ sum (part2 line))))
 
